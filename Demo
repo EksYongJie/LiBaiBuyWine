@@ -1,0 +1,67 @@
+public class LiBaiBuyWine_Test {
+	public static void main(String[] args) {
+    //遍历2的10次方种可能性
+		int minAmount=0b10000000001;//1+1024=1025
+		int maxAmount=0b11111111111;//1023+1024=2047
+		int total=0;
+		for(int i=minAmount;i<=maxAmount;i++){
+			//将数字转为二进制表现形式
+			String string="";
+			int i_temp=i;
+			while(i_temp!=0){
+				string =(i_temp%2) + string;//保存结果  
+				i_temp =i_temp/2;//改变num 内容  
+			}
+			String string_new=string.substring(1, string.length());
+			System.out.println(string_new+"==================================================================="+(i-1024));
+			double wineAmount=0.0;
+			//拿到数，如果有5个1，5个0，最后一个为0，才让其继续执行代码
+			boolean correctNum = isCorrectNum(i);
+			if (correctNum) {
+				int currentNum=i;
+				while(currentNum!=0){
+					if ((currentNum&1)==0) {
+						wineAmount=meetFlower(wineAmount);
+						System.out.println(wineAmount);
+					}else{
+						wineAmount=meetShop(wineAmount);
+						System.out.println(wineAmount);
+					}
+					currentNum=currentNum>>1;
+					int currentNumNext=currentNum>>1;
+					if (currentNumNext==0) {
+						System.out.println("第"+(++total)+"种情况.....................................................");
+						break;
+					}
+				}
+			}
+		}
+	}
+  //判断是否5次遇到花，5次遇到店，且第10次遇到的是花
+	public static boolean isCorrectNum(int currentNum){
+		int meetFlowerAmount=0;
+		//第10次遇到花
+		if ((currentNum&1)==0) {
+			++meetFlowerAmount;
+			currentNum=currentNum>>1;
+			while(currentNum!=0){
+				if ((currentNum&1)==0) {
+					++meetFlowerAmount;
+				}
+				currentNum=currentNum>>1;
+			}
+			if (meetFlowerAmount==5) {
+				return true;
+			}
+		}
+		return false;
+	}
+  //遇到花
+	public static double meetFlower(double wineAmount){
+		return wineAmount+1;
+	}
+  //遇到店
+	public static double meetShop(double wineAmount){
+		return wineAmount/2;
+	}
+}
